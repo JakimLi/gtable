@@ -2,6 +2,22 @@ apply plugin: 'java'
 apply plugin: 'groovy'
 apply plugin: 'idea'
 
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile (
+            'org.codehaus.groovy:groovy-all:2.1.5',
+            'com.google.guava:guava-collections:r03'
+    )
+
+    testCompile (
+            'junit:junit:4.5',
+            'org.spockframework:spock-maven:0.7-groovy-2.0'
+    )
+}
+
 task wrapper(type: Wrapper) {
 	gradleVersion = 2.0;
 }
