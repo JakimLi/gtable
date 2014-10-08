@@ -14,7 +14,9 @@ dependencies {
 
     testCompile (
             'junit:junit:4.5',
-            'org.spockframework:spock-maven:0.7-groovy-2.0'
+            'org.spockframework:spock-maven:0.7-groovy-2.0',
+            'org.objenesis:objenesis:2.1',
+            'cglib:cglib-nodep:3.1'
     )
 }
 
