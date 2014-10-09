@@ -15,11 +15,15 @@ apply plugin: 'cobertura'
 
 group = 'jakim'
 version = '1.0.0.SNAPSHOT'
-sourceCompatibility=1.6
+sourceCompatibility = 1.6
 
 cobertura {
     format = 'html'
     includes = ['**/*.java', '**/*.groovy']
+}
+
+codenarc {
+    configFile = file("${project.projectDir}/config/codenarc/codenarc.groovy")
 }
 
 repositories {
@@ -27,12 +31,12 @@ repositories {
 }
 
 dependencies {
-    compile (
+    compile(
             'org.codehaus.groovy:groovy-all:2.1.5',
             'com.google.guava:guava-collections:r03'
     )
 
-    testCompile (
+    testCompile(
             'junit:junit:4.5',
             'org.spockframework:spock-maven:0.7-groovy-2.0',
             'org.objenesis:objenesis:2.1',
@@ -41,5 +45,5 @@ dependencies {
 }
 
 task wrapper(type: Wrapper) {
-	gradleVersion = 2.0;
+    gradleVersion = 2.0;
 }
