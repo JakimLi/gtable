@@ -1,6 +1,26 @@
 apply plugin: 'java'
 apply plugin: 'groovy'
 apply plugin: 'idea'
+apply plugin: 'codenarc'
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.eriwen:gradle-cobertura-plugin:1.1.1'
+    }
+}
+apply plugin: 'cobertura'
+
+group = 'jakim'
+version = '1.0.0.SNAPSHOT'
+sourceCompatibility=1.6
+
+cobertura {
+    format = 'html'
+    includes = ['**/*.java', '**/*.groovy']
+}
 
 repositories {
     mavenCentral()
