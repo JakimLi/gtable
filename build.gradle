@@ -9,16 +9,18 @@ buildscript {
     }
     dependencies {
         classpath 'com.eriwen:gradle-cobertura-plugin:1.1.1'
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.0.1'
     }
 }
 apply plugin: 'cobertura'
+apply plugin: 'com.github.kt3k.coveralls'
 
 group = 'jakim'
 version = '1.0.0.SNAPSHOT'
 sourceCompatibility = 1.6
 
 cobertura {
-    format = 'html'
+    format = 'xml'
     includes = ['**/*.java', '**/*.groovy']
 }
 
