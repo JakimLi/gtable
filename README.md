@@ -1,3 +1,6 @@
+### Status
+[![Build Status](https://travis-ci.org/JakimLi/gtable.svg?branch=master)](https://travis-ci.org/JakimLi/gtable)
+
 gtable
 ======
 
