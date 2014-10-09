@@ -8,10 +8,11 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.eriwen:gradle-cobertura-plugin:1.1.1'
+        classpath 'net.saliman:gradle-cobertura-plugin:2.0.0'
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.0.1'
     }
 }
+
 apply plugin: 'cobertura'
 apply plugin: 'com.github.kt3k.coveralls'
 
@@ -19,10 +20,8 @@ group = 'jakim'
 version = '1.0.0.SNAPSHOT'
 sourceCompatibility = 1.6
 
-cobertura {
-    format = 'xml'
-    includes = ['**/*.java', '**/*.groovy']
-}
+cobertura.coverageFormats = ['html', 'xml']
+cobertura.coverageSourceDirs = sourceSets.main.groovy.srcDirs
 
 codenarc {
     configFile = file("${project.projectDir}/config/codenarc/codenarc.groovy")
