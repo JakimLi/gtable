@@ -1,8 +1,5 @@
 ### Status
-[![Build Status](https://travis-ci.org/JakimLi/gtable.svg?branch=master)](https://travis-ci.org/JakimLi/gtable)
-
-### Coverage
-[![Coverage Status](https://coveralls.io/repos/JakimLi/gtable/badge.png)](https://coveralls.io/r/JakimLi/gtable)
+[![Build Status](https://travis-ci.org/JakimLi/gtable.svg?branch=master)](https://travis-ci.org/JakimLi/gtable) [![Coverage Status](https://coveralls.io/repos/JakimLi/gtable/badge.png?branch=master)](https://coveralls.io/r/JakimLi/gtable?branch=master)
 
 gtable
 ======
