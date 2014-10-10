@@ -18,16 +18,12 @@ class GStatement {
     }
 
     private String cols() {
-        id && columns.add(0, id)
+        processId()
         columns.join(COMMA)
     }
 
     private String vals() {
         "${autoIncremental()}${values.collect { numeric(it) ? it : quote(it) }.join(COMMA)}"
-    }
-
-    def autoIncremental = {
-        sequence ? "${sequence}.nextval," : ''
     }
 
     private boolean numeric(object) {
@@ -40,5 +36,19 @@ class GStatement {
 
     private String insertInto(def table, def cols, def vals) {
         "INSERT INTO $table($cols) VALUES($vals)"
+    }
+
+    def mysql() {
+        this.processId = { '' }
+        this.autoIncremental = { '' }
+        this
+    }
+
+    def processId = {
+        id && columns.add(0, id)
+    }
+
+    def autoIncremental = {
+        sequence ? "${sequence}.nextval," : ''
     }
 }

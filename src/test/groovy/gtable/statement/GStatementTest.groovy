@@ -97,4 +97,20 @@ class GStatementTest extends Specification {
         then:
         insertStatement == '''INSERT INTO PERSONS(PERSON_ID,NAME,AGE) VALUES(SEQ_PERSONS.nextval,'Jakim',24)'''
     }
+
+    def "mysql has id should generated correct insert sql"() {
+        given:
+        statement.with {
+            tableName = 'PERSONS'
+            columns = ['NAME', 'AGE']
+            values = ['Jakim', 24]
+            id = 'PERSON_ID'
+        }
+
+        when:
+        def insertStatement = statement.mysql().insert()
+
+        then:
+        insertStatement == '''INSERT INTO PERSONS(NAME,AGE) VALUES('Jakim',24)'''
+    }
 }
