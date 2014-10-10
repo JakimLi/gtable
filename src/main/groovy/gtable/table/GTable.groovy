@@ -11,6 +11,7 @@ class GTable {
     String tableName
     GStatement statement = new GStatement()
     Sql sql
+    String dialect = 'mysql'
 
     GTable(Sql sql) {
         this.sql = sql
@@ -22,7 +23,7 @@ class GTable {
             columns = vals*.key
             values = vals*.value
         }
-        sql.executeInsert(statement.insert())
+        sql.executeInsert(statement."$dialect"().insert())
     }
 
     def table(String tableName) {
