@@ -9,6 +9,7 @@ script:
 
 before_install:
   - mysql -e "create database IF NOT EXISTS test;" -uroot
+  - mysql -e "use test;" -uroot
   - mysql -e "CREATE TABLE animals (id MEDIUMINT NOT NULL AUTO_INCREMENT,name CHAR(30) NOT NULL,age int NOT NULL,PRIMARY KEY (id));" -uroot
 
 after_success:
