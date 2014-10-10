@@ -23,4 +23,12 @@ class GTableTest extends Specification {
         then:
         1 * sql.executeInsert(_)
     }
+
+    def "using table to set table name and insert values"() {
+        when:
+        gTable.table('PERSONS').save([name: 'Jakim', age: 24, birth: '1990-05-01'])
+
+        then:
+        1 * sql.executeInsert { it.contains('PERSONS') }
+    }
 }

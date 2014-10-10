@@ -24,4 +24,9 @@ class GTable {
         }
         sql.executeInsert(statement.insert())
     }
+
+    def table(String tableName) {
+        this.tableName = tableName
+        this
+    }
 }
