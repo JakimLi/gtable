@@ -10,6 +10,8 @@ class GStatement {
     List<Object> values
     String id
     String sequence
+    def processId = { '' }
+    def autoIncremental = { '' }
 
     String insert() {
         assert tableName, 'table name cannot be empty'
@@ -39,16 +41,12 @@ class GStatement {
     }
 
     def mysql() {
-        this.processId = { '' }
-        this.autoIncremental = { '' }
         this
     }
 
-    def processId = {
-        id && columns.add(0, id)
-    }
-
-    def autoIncremental = {
-        sequence ? "${sequence}.nextval," : ''
+    def oracle() {
+        this.processId = { id && columns.add(0, id) }
+        this.autoIncremental = { sequence ? "${sequence}.nextval," : '' }
+        this
     }
 }

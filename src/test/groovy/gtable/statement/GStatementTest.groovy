@@ -92,7 +92,7 @@ class GStatementTest extends Specification {
         }
 
         when:
-        def insertStatement = statement.insert()
+        def insertStatement = statement.oracle().insert()
 
         then:
         insertStatement == '''INSERT INTO PERSONS(PERSON_ID,NAME,AGE) VALUES(SEQ_PERSONS.nextval,'Jakim',24)'''
