@@ -8,7 +8,7 @@ Target to do the simple CRUD to relational database, do it easy and simple based
 ## Install
 
 ## Sample
-### save to table, default using mysql dialect
+save to table, default using mysql dialect
 
     def gTable = new GTable(sql)
 
