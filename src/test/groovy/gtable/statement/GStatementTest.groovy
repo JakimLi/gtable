@@ -81,7 +81,7 @@ class GStatementTest extends Specification {
         ['COL1', 'COL2'] | ['V1', 'V2'] || '''INSERT INTO PERSONS(COL1,COL2) VALUES('V1','V2')'''
     }
 
-    def "should generate insert statement default as oracle dialect and has auto incremental id"() {
+    def "oracle should generate insert statement and has auto incremental id"() {
         given:
         statement.with {
             tableName = 'PERSONS'
@@ -98,7 +98,7 @@ class GStatementTest extends Specification {
         insertStatement == '''INSERT INTO PERSONS(PERSON_ID,NAME,AGE) VALUES(SEQ_PERSONS.nextval,'Jakim',24)'''
     }
 
-    def "mysql has id should generated correct insert sql"() {
+    def "mysql has id should generated correct insert sql even if id presented"() {
         given:
         statement.with {
             tableName = 'PERSONS'
