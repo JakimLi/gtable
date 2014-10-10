@@ -8,6 +8,8 @@ class GStatement {
     String tableName
     List<String> columns
     List<Object> values
+    String id
+    String sequence
 
     String insert() {
         assert tableName, 'table name cannot be empty'
@@ -16,11 +18,16 @@ class GStatement {
     }
 
     private String cols() {
+        id && columns.add(0, id)
         columns.join(COMMA)
     }
 
     private String vals() {
-        values.collect { numeric(it) ? it : quote(it) }.join(COMMA)
+        "${autoIncremental()}${values.collect { numeric(it) ? it : quote(it) }.join(COMMA)}"
+    }
+
+    def autoIncremental = {
+        sequence ? "${sequence}.nextval," : ''
     }
 
     private boolean numeric(object) {

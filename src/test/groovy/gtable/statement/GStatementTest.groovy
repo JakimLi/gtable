@@ -80,4 +80,21 @@ class GStatementTest extends Specification {
         ['COL1', 'COL2'] | [1, '2']     || '''INSERT INTO PERSONS(COL1,COL2) VALUES(1,'2')'''
         ['COL1', 'COL2'] | ['V1', 'V2'] || '''INSERT INTO PERSONS(COL1,COL2) VALUES('V1','V2')'''
     }
+
+    def "should generate insert statement default as oracle dialect and has auto incremental id"() {
+        given:
+        statement.with {
+            tableName = 'PERSONS'
+            columns = ['NAME', 'AGE']
+            values = ['Jakim', 24]
+            id = 'PERSON_ID'
+            sequence = 'SEQ_PERSONS'
+        }
+
+        when:
+        def insertStatement = statement.insert()
+
+        then:
+        insertStatement == '''INSERT INTO PERSONS(PERSON_ID,NAME,AGE) VALUES(SEQ_PERSONS.nextval,'Jakim',24)'''
+    }
 }
