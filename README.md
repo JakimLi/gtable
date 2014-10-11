@@ -41,3 +41,11 @@ you can override the column name use columns method
     assert persons.size() == 2
     assert persons.contains([name: 'jakim', age: 24])
     assert persons.contains([name: 'linjia', age: 19])
+
+default, the returned map will use the column name in database as key, you can override this behavior
+
+    def persons = gTable.columns([na: 'name']).all()
+
+    assert persons.size() == 2
+    assert persons.contains([na: 'jakim', age: 24])
+    assert persons.contains([na: 'linjia', age: 19])
