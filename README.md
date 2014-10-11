@@ -20,6 +20,7 @@ save to table, default using mysql dialect
     assert row.age == 13
 
 if database generate an id, for example auto incremental internal id, save method will return it
+
     def generatedId = gTable.table('animals').save([name: 'dog', age: 13])
 
     def row = sql.firstRow('select * from animals')
