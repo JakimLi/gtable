@@ -8,7 +8,7 @@ Target to do the simple CRUD to relational database, do it easy and simple based
 ### Install
 
 ### Sample
-save to table, default using mysql dialect
+you can save a map to a table, default using mysql dialect, will use the key as the column name
 
     def gTable = new GTable(sql)
 
@@ -23,5 +23,4 @@ if database generate an id, for example auto incremental internal id, save metho
 
     def generatedId = gTable.table('animals').save([name: 'dog', age: 13])
 
-    def row = sql.firstRow('select * from animals')
-    assert row.id == generatedId
+    assert generatedId > 0
