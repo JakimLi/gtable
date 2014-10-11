@@ -49,3 +49,13 @@ default, the returned map will use the column name in database as key, you can o
     assert persons.size() == 2
     assert persons.contains([na: 'jakim', age: 24])
     assert persons.contains([na: 'linjia', age: 19])
+
+for the id column, either you can define it just like any other columns, or you can use id to change the id column's key:
+
+    def animals = gTable.id('animal_id').columns([na: 'name']).all()
+    assert persons.size() == 1
+    assert persons[0] == [id: 1, na: 'dog']
+    
+    def animals = gTable.id('animalId', 'animal_id').columns([na: 'name']).all()
+    assert persons.size() == 1
+    assert persons[0] == [animalId: 1, na: 'dog']
