@@ -127,29 +127,9 @@ class GStatementTest extends Specification {
         where:
 
         cols            | dialect  || state
-        ['name', 'age'] | 'mysql'  || 'SELECT name,age FROM PERSONS'
-        ['name', 'age'] | 'oracle' || 'SELECT name,age FROM PERSONS'
+        ['name', 'age'] | 'mysql'  || 'SELECT * FROM PERSONS'
+        ['name', 'age'] | 'oracle' || 'SELECT * FROM PERSONS'
         []              | 'oracle' || 'SELECT * FROM PERSONS'
         null            | 'oracle' || 'SELECT * FROM PERSONS'
-    }
-
-    def "can generate select statement when id present"() {
-        given:
-        statement.with {
-            tableName = 'PERSONS'
-            columns = cols
-            id = 'PERSON_ID'
-        }
-
-        expect:
-        statement."$dialect"().select() == state
-
-        where:
-
-        cols            | dialect  || state
-        ['name', 'age'] | 'mysql'  || 'SELECT PERSON_ID,name,age FROM PERSONS'
-        ['name', 'age'] | 'oracle' || 'SELECT PERSON_ID,name,age FROM PERSONS'
-        []              | 'oracle' || 'SELECT PERSON_ID FROM PERSONS'
-        null            | 'oracle' || 'SELECT PERSON_ID FROM PERSONS'
     }
 }

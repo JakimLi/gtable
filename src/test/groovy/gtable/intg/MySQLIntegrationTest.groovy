@@ -53,6 +53,18 @@ class MySQLIntegrationTest {
         assert 24 == row.age
     }
 
+    @Test
+    void 'should select all from table'() {
+        gTable.table('persons').save([name: 'jakim', age: 24])
+        gTable.table('persons').save([name: 'linjia', age: 19])
+
+        def persons = gTable.all()
+
+        assert persons.size() == 2
+        assert persons.contains([name: 'jakim', age: 24])
+        assert persons.contains([name: 'linjia', age: 19])
+    }
+
     @After
     void tearDown() {
         destroyDB()

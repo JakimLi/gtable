@@ -20,12 +20,7 @@ class GStatement {
     }
 
     def select() {
-        "SELECT ${selectCols() ?: '*'} FROM $tableName"
-    }
-
-    def selectCols() {
-        includeId()
-        columns?.join(COMMA)
+        "SELECT * FROM $tableName"
     }
 
     def includeId = {

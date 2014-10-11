@@ -32,7 +32,7 @@ class GTable {
     }
 
     def doInsert = {
-        sql.executeInsert(statement."$dialect"().insert()).find { true }.find { true }
+        sql.executeInsert(statement."$dialect"().insert() as String).find { true }.find { true }
     }
 
     def table(String tableName) {
@@ -43,5 +43,14 @@ class GTable {
     def columns(Map<String, String> cols) {
         overridingCols = cols
         this
+    }
+
+    def all() {
+        def result = []
+        statement.tableName = tableName
+        sql.eachRow(statement."$dialect"().select() as String) {
+            result << it.toRowResult()
+        }
+        result
     }
 }

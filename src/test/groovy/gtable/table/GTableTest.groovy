@@ -42,4 +42,12 @@ class GTableTest extends Specification {
         then:
         1 * sql.executeInsert { it.contains('PERSON_NAME') } >> [[0]]
     }
+
+    def "can select all from table"() {
+        when:
+        gTable.table('PERSONS').all()
+
+        then:
+        1 * sql.eachRow('SELECT * FROM PERSONS', _)
+    }
 }
