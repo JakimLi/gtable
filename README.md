@@ -24,3 +24,7 @@ if database generate an id, for example auto incremental internal id, save metho
     def generatedId = gTable.table('animals').save([name: 'dog', age: 13])
 
     assert generatedId > 0
+
+you can override the column name use columns method
+
+    gTable.table('animals').columns([name: 'ANIMAL_NAME']).save([name: 'dog', age: 13])

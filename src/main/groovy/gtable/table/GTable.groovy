@@ -12,6 +12,7 @@ class GTable {
     GStatement statement = new GStatement()
     Sql sql
     String dialect = 'mysql'
+    Map<String, String> overridingCols
 
     GTable(Sql sql) {
         this.sql = sql
@@ -20,10 +21,14 @@ class GTable {
     def save(Map<String, Object> vals) {
         statement.with {
             tableName = this.tableName
-            columns = vals*.key
+            columns = cols(vals.keySet())
             values = vals*.value
         }
         doInsert()
+    }
+
+    List<String> cols(keys) {
+        keys.collect { overridingCols?."$it" ?: it }
     }
 
     def doInsert = {
@@ -32,6 +37,11 @@ class GTable {
 
     def table(String tableName) {
         this.tableName = tableName
+        this
+    }
+
+    def columns(Map<String, String> cols) {
+        overridingCols = cols
         this
     }
 }

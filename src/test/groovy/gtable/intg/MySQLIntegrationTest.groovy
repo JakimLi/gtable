@@ -33,6 +33,18 @@ class MySQLIntegrationTest {
     }
 
     @Test
+    void 'can override column name and insert'() {
+        def actualId = gTable.table('animals')
+                .columns([na: 'name', ag: 'age'])
+                .save([na: 'dog', ag: 13])
+
+        def row = sql.firstRow('select * from animals')
+        assert actualId == row.id
+        assert 'dog' == row.name
+        assert 13 == row.age
+    }
+
+    @Test
     void 'should insert into table when there is no auto generated column'() {
         gTable.table('persons').save([name: 'jakim', age: 24])
 

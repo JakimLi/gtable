@@ -32,4 +32,14 @@ class GTableTest extends Specification {
         then:
         1 * sql.executeInsert { it.contains('PERSONS') } >> [[0]]
     }
+
+    def "can override the column name in map"() {
+        when:
+        gTable.table('PERSONS')
+                .columns([name: 'PERSON_NAME'])
+                .save([name: 'Jakim', age: 24, birth: '1990-05-01'])
+
+        then:
+        1 * sql.executeInsert { it.contains('PERSON_NAME') } >> [[0]]
+    }
 }
