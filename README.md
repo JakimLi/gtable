@@ -32,3 +32,12 @@ if database generate an id, for example auto incremental internal id, save metho
 you can override the column name use columns method
 
     gTable.table('animals').columns([name: 'ANIMAL_NAME']).save([name: 'dog', age: 13])
+
+
+#### read all records form table
+
+    def persons = gTable.table('persons').all()
+
+    assert persons.size() == 2
+    assert persons.contains([name: 'jakim', age: 24])
+    assert persons.contains([name: 'linjia', age: 19])
