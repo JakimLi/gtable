@@ -113,4 +113,43 @@ class GStatementTest extends Specification {
         then:
         insertStatement == '''INSERT INTO PERSONS(NAME,AGE) VALUES('Jakim',24)'''
     }
+
+    def "can generate select sql statement"() {
+        given:
+        statement.with {
+            tableName = 'PERSONS'
+            columns = cols
+        }
+
+        expect:
+        statement."$dialect"().select() == state
+
+        where:
+
+        cols            | dialect  || state
+        ['name', 'age'] | 'mysql'  || 'SELECT name,age FROM PERSONS'
+        ['name', 'age'] | 'oracle' || 'SELECT name,age FROM PERSONS'
+        []              | 'oracle' || 'SELECT * FROM PERSONS'
+        null            | 'oracle' || 'SELECT * FROM PERSONS'
+    }
+
+    def "can generate select statement when id present"() {
+        given:
+        statement.with {
+            tableName = 'PERSONS'
+            columns = cols
+            id = 'PERSON_ID'
+        }
+
+        expect:
+        statement."$dialect"().select() == state
+
+        where:
+
+        cols            | dialect  || state
+        ['name', 'age'] | 'mysql'  || 'SELECT PERSON_ID,name,age FROM PERSONS'
+        ['name', 'age'] | 'oracle' || 'SELECT PERSON_ID,name,age FROM PERSONS'
+        []              | 'oracle' || 'SELECT PERSON_ID FROM PERSONS'
+        null            | 'oracle' || 'SELECT PERSON_ID FROM PERSONS'
+    }
 }

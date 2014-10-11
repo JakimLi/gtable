@@ -19,9 +19,19 @@ class GStatement {
         insertInto tableName, cols(), vals()
     }
 
+    def select() {
+        "SELECT ${selectCols() ?: '*'} FROM $tableName"
+    }
+
+    def selectCols() {
+        columns = columns ?: []
+        id && columns.add(0, id)
+        columns?.join(COMMA)
+    }
+
     private String cols() {
         processId()
-        columns.join(COMMA)
+        columns?.join(COMMA)
     }
 
     private String vals() {
@@ -45,7 +55,10 @@ class GStatement {
     }
 
     def oracle() {
-        this.processId = { id && columns.add(0, id) }
+        this.processId = {
+            columns = columns ?: []
+            id && columns?.add(0, id)
+        }
         this.autoIncremental = { sequence ? "${sequence}.nextval," : '' }
         this
     }
