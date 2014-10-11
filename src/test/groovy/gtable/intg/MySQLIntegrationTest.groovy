@@ -65,6 +65,18 @@ class MySQLIntegrationTest {
         assert persons.contains([name: 'linjia', age: 19])
     }
 
+    @Test
+    void 'should select all to custom column name'() {
+        gTable.table('persons').save([name: 'jakim', age: 24])
+        gTable.table('persons').save([name: 'linjia', age: 19])
+
+        def persons = gTable.columns([na: 'name']).all()
+
+        assert persons.size() == 2
+        assert persons.contains([na: 'jakim', age: 24])
+        assert persons.contains([na: 'linjia', age: 19])
+    }
+
     @After
     void tearDown() {
         destroyDB()

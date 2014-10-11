@@ -27,6 +27,15 @@ class GTable {
         doInsert()
     }
 
+    def all() {
+        def result = []
+        statement.tableName = tableName
+        sql.eachRow(statement."$dialect"().select() as String) {
+            result << it.toRowResult()
+        }
+        userDefinedCols(result)
+    }
+
     List<String> cols(keys) {
         keys.collect { overridingCols?."$it" ?: it }
     }
@@ -45,12 +54,14 @@ class GTable {
         this
     }
 
-    def all() {
-        def result = []
-        statement.tableName = tableName
-        sql.eachRow(statement."$dialect"().select() as String) {
-            result << it.toRowResult()
+    List userDefinedCols(List result) {
+        def cols = []
+        result.each {
+            cols << it.inject([:]) { map, that ->
+                def col = overridingCols.find { the -> the.value == that.key }
+                map << [((col ?: that).key): that.value]
+            }
         }
-        result
+        cols
     }
 }
