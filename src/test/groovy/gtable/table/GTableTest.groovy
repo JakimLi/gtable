@@ -50,4 +50,12 @@ class GTableTest extends Specification {
         then:
         1 * sql.eachRow('SELECT * FROM PERSONS', _)
     }
+
+    def "id should also added to override columns"() {
+        when:
+        gTable.table('PERSONS').id('PERSON_ID').all()
+
+        then:
+        1 * sql.eachRow('SELECT * FROM PERSONS', _)
+    }
 }

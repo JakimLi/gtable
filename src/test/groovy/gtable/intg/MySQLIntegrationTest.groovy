@@ -27,7 +27,7 @@ class MySQLIntegrationTest {
         def actualId = gTable.table('animals').save([name: 'dog', age: 13])
 
         def row = sql.firstRow('select * from animals')
-        assert actualId == row.id
+        assert actualId == row.animal_id
         assert 'dog' == row.name
         assert 13 == row.age
     }
@@ -39,7 +39,7 @@ class MySQLIntegrationTest {
                 .save([na: 'dog', ag: 13])
 
         def row = sql.firstRow('select * from animals')
-        assert actualId == row.id
+        assert actualId == row.animal_id
         assert 'dog' == row.name
         assert 13 == row.age
     }
@@ -77,6 +77,16 @@ class MySQLIntegrationTest {
         assert persons.contains([na: 'linjia', age: 19])
     }
 
+    @Test
+    void 'should select all to custom id name'() {
+        gTable.table('animals').save([name: 'dog', age: 3])
+
+        def persons = gTable.id('animal_id').columns([na: 'name']).all()
+
+        assert persons.size() == 1
+        assert persons.contains([id: 1, na: 'dog', age: 3])
+    }
+
     @After
     void tearDown() {
         destroyDB()
@@ -97,10 +107,10 @@ class MySQLIntegrationTest {
 
         sql.execute '''
             CREATE TABLE animals (
-                id MEDIUMINT NOT NULL AUTO_INCREMENT,
+                animal_id MEDIUMINT NOT NULL AUTO_INCREMENT,
                 name CHAR(30) NOT NULL,
                 age int not null,
-                PRIMARY KEY (id)
+                PRIMARY KEY (animal_id)
             );
         '''
     }

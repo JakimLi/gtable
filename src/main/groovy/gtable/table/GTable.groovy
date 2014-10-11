@@ -12,7 +12,8 @@ class GTable {
     GStatement statement = new GStatement()
     Sql sql
     String dialect = 'mysql'
-    Map<String, String> overridingCols
+    Map<String, String> overridingCols = [:]
+    String idName
 
     GTable(Sql sql) {
         this.sql = sql
@@ -50,7 +51,7 @@ class GTable {
     }
 
     def columns(Map<String, String> cols) {
-        overridingCols = cols
+        overridingCols << cols
         this
     }
 
@@ -61,5 +62,11 @@ class GTable {
                 map << [((overridingCols.find { the -> the.value == that.key } ?: that).key): that.value]
             }
         }
+    }
+
+    def id(String idName) {
+        this.idName = idName
+        this.overridingCols << [id: idName]
+        this
     }
 }
