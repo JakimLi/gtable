@@ -23,7 +23,11 @@ class GTable {
             columns = vals*.key
             values = vals*.value
         }
-        sql.executeInsert(statement."$dialect"().insert())
+        doInsert()
+    }
+
+    def doInsert = {
+        sql.executeInsert(statement."$dialect"().insert()).find { true }.find { true }
     }
 
     def table(String tableName) {

@@ -98,7 +98,6 @@ ruleset {
     AbstractClassWithPublicConstructor
     AbstractClassWithoutAbstractMethod
     BooleanMethodReturnsNull
-    BuilderMethodWithSideEffects
     CloneableWithoutClone
     CloseWithoutCloseable
     CompareToWithoutComparable
@@ -288,7 +287,6 @@ ruleset {
     ClassName
     ClassNameSameAsFilename
     ConfusingMethodName
-    FactoryMethodName
     FieldName
     InterfaceName
     MethodName {

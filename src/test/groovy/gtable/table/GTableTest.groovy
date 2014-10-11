@@ -18,10 +18,11 @@ class GTableTest extends Specification {
         }
 
         when:
-        gTable.save([name: 'Jakim', age: 24, birth: '1990-05-01'])
+        def generatedId = gTable.save([name: 'Jakim', age: 24, birth: '1990-05-01'])
 
         then:
-        1 * sql.executeInsert(_)
+        1 * sql.executeInsert(_) >> [[1]]
+        generatedId == 1
     }
 
     def "using table to set table name and insert values"() {
@@ -29,6 +30,6 @@ class GTableTest extends Specification {
         gTable.table('PERSONS').save([name: 'Jakim', age: 24, birth: '1990-05-01'])
 
         then:
-        1 * sql.executeInsert { it.contains('PERSONS') }
+        1 * sql.executeInsert { it.contains('PERSONS') } >> [[0]]
     }
 }
