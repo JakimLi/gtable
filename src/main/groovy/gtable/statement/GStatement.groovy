@@ -24,9 +24,13 @@ class GStatement {
     }
 
     def selectCols() {
+        includeId()
+        columns?.join(COMMA)
+    }
+
+    def includeId = {
         columns = columns ?: []
         id && columns.add(0, id)
-        columns?.join(COMMA)
     }
 
     private String cols() {
@@ -55,10 +59,7 @@ class GStatement {
     }
 
     def oracle() {
-        this.processId = {
-            columns = columns ?: []
-            id && columns?.add(0, id)
-        }
+        this.processId = includeId
         this.autoIncremental = { sequence ? "${sequence}.nextval," : '' }
         this
     }
