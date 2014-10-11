@@ -33,7 +33,7 @@ class GTable {
         sql.eachRow(statement."$dialect"().select() as String) {
             result << it.toRowResult()
         }
-        userDefinedCols(result)
+        userCols(result)
     }
 
     List<String> cols(keys) {
@@ -54,14 +54,12 @@ class GTable {
         this
     }
 
-    List userDefinedCols(List result) {
-        def cols = []
-        result.each {
-            cols << it.inject([:]) { map, that ->
-                def col = overridingCols.find { the -> the.value == that.key }
-                map << [((col ?: that).key): that.value]
+    @SuppressWarnings('UnnecessaryCollectCall')
+    List userCols(List result) {
+        result.collect {
+            it.inject([:]) { map, that ->
+                map << [((overridingCols.find { the -> the.value == that.key } ?: that).key): that.value]
             }
         }
-        cols
     }
 }
