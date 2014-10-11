@@ -87,6 +87,16 @@ class MySQLIntegrationTest {
         assert persons.contains([id: 1, na: 'dog', age: 3])
     }
 
+    @Test
+    void 'should select all to custom id name with other id name'() {
+        gTable.table('animals').save([name: 'dog', age: 3])
+
+        def persons = gTable.id('animalId', 'animal_id').columns([na: 'name']).all()
+
+        assert persons.size() == 1
+        assert persons.contains([animalId: 1, na: 'dog', age: 3])
+    }
+
     @After
     void tearDown() {
         destroyDB()

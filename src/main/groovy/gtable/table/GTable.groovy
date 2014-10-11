@@ -69,4 +69,10 @@ class GTable {
         this.overridingCols << [id: idName]
         this
     }
+
+    def id(String idKey, String idName) {
+        this.idName = idName
+        this.overridingCols << [(idKey): idName]
+        this
+    }
 }
