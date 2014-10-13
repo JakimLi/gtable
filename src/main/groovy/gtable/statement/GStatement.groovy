@@ -1,5 +1,8 @@
 package gtable.statement
 
+import static gtable.util.Util.numeric
+import static gtable.util.Util.quote
+
 /**
  * Created by Jakim Li on 14-10-9.
  */
@@ -37,14 +40,6 @@ class GStatement {
         "${autoIncremental()}${values.collect { numeric(it) ? it : quote(it) }.join(COMMA)}"
     }
 
-    private boolean numeric(object) {
-        object instanceof Number
-    }
-
-    private GString quote(object) {
-        """'${object.toString()}'"""
-    }
-
     private String insertInto(def table, def cols, def vals) {
         "INSERT INTO $table($cols) VALUES($vals)"
     }
@@ -57,5 +52,13 @@ class GStatement {
         this.processId = includeId
         this.autoIncremental = { sequence ? "${sequence}.nextval," : '' }
         this
+    }
+
+    def update(Map<String, Object> updating) {
+        """UPDATE $tableName SET ${
+            updating.collect {
+                "${it.key}=${numeric(it.value) ? it.value : quote(it.value)}"
+            }.join(COMMA)
+        }"""
     }
 }

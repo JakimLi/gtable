@@ -238,7 +238,6 @@ ruleset {
     DuplicateImport
     ImportFromSamePackage
     ImportFromSunPackages
-    MisorderedStaticImports
     NoWildcardImports
     UnnecessaryGroovyImport
     UnusedImport

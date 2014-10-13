@@ -132,4 +132,19 @@ class GStatementTest extends Specification {
         []              | 'oracle' || 'SELECT * FROM PERSONS'
         null            | 'oracle' || 'SELECT * FROM PERSONS'
     }
+
+    def "can generate update sql statment"() {
+        statement.with {
+            tableName = 'PERSONS'
+        }
+
+        expect:
+        statement.update(updating) == state
+
+        where:
+        updating || state
+        [name: 'jakim'] || """UPDATE PERSONS SET name='jakim'"""
+        [age: 3] || 'UPDATE PERSONS SET age=3'
+        [name: 'jakim', age: 3] || """UPDATE PERSONS SET name='jakim',age=3"""
+    }
 }

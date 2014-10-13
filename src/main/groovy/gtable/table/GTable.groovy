@@ -2,6 +2,7 @@ package gtable.table
 
 import groovy.sql.Sql
 import gtable.statement.GStatement
+import gtable.statement.Where
 
 /**
  * Created by Jakim Li on 14-10-10.
@@ -74,5 +75,19 @@ class GTable {
         this.idName = idName
         this.overridingCols << [(idKey): idName]
         this
+    }
+
+    def update(Map<String, Object> updating) {
+        statement.with {
+            tableName = this.tableName
+        }
+        sql.executeUpdate(statement.update(updating) as String)
+    }
+
+    def update(Map<String, Object> updating, Where where) {
+        statement.with {
+            tableName = this.tableName
+        }
+        sql.executeUpdate("${statement.update(updating)} ${where.toString()}" as String)
     }
 }

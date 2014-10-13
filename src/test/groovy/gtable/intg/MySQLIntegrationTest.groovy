@@ -6,6 +6,9 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
+import static gtable.statement.Where.eq
+import static gtable.statement.Where.where
+
 /**
  * Created by Jakim Li on 14-10-10.
  */
@@ -95,6 +98,44 @@ class MySQLIntegrationTest {
 
         assert persons.size() == 1
         assert persons.contains([animalId: 1, na: 'dog', age: 3])
+    }
+
+    @Test
+    void 'should update all table values'() {
+        gTable.table('persons').save([name: 'jakim', age: 24])
+        gTable.table('persons').save([name: 'linjia', age: 19])
+
+        def persons = gTable.all()
+
+        assert persons.size() == 2
+        assert persons.contains([name: 'jakim', age: 24])
+        assert persons.contains([name: 'linjia', age: 19])
+
+        gTable.update([age: 25])
+
+        persons = gTable.all()
+        assert persons.size() == 2
+        assert persons.contains([name: 'jakim', age: 25])
+        assert persons.contains([name: 'linjia', age: 25])
+    }
+
+    @Test
+    void 'should update table values with condition'() {
+        gTable.table('persons').save([name: 'jakim', age: 24])
+        gTable.table('persons').save([name: 'linjia', age: 19])
+
+        def persons = gTable.all()
+
+        assert persons.size() == 2
+        assert persons.contains([name: 'jakim', age: 24])
+        assert persons.contains([name: 'linjia', age: 19])
+
+        gTable.update([age: 25], where('name', eq('jakim')))
+
+        persons = gTable.all()
+        assert persons.size() == 2
+        assert persons.contains([name: 'jakim', age: 25])
+        assert persons.contains([name: 'linjia', age: 19])
     }
 
     @After
