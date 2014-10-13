@@ -59,3 +59,30 @@ for the id column, either you can define it just like any other columns, or you 
     def animals = gTable.id('animalId', 'animal_id').columns([na: 'name']).all()
     assert persons.size() == 1
     assert persons[0] == [animalId: 1, na: 'dog']
+    
+    
+#### update values
+You can update all records at one time
+
+    gTable.update([age: 25])
+    
+    persons = gTable.all()
+    assert persons.size() == 2
+    assert persons.contains([name: 'jakim', age: 25])
+    assert persons.contains([name: 'linjia', age: 25])
+    
+You can also update records with specific condition using where
+
+    import static gtable.statement.Where.eq
+    import static gtable.statement.Where.where
+
+    gTable.update([age: 25], where('name', eq('jakim')))
+    
+    persons = gTable.all()
+    assert persons.size() == 2
+    assert persons.contains([name: 'jakim', age: 25])
+    assert persons.contains([name: 'linjia', age: 19])
+
+You can use and/or to specify more than one condition
+
+    gTable.update([age: 25], where('name', eq('jakim')).and('id', eq(3)))
