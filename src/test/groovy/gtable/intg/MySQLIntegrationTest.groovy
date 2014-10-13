@@ -169,6 +169,13 @@ class MySQLIntegrationTest {
         assert animals.size() == 2
         assert animals.contains([id: 1, na: 'newname', ag: 3])
         assert animals.contains([id: 2, na: 'cat', ag: 9])
+
+        gTable.update([na: 'anotherName'], where('id', eq(1)).and('ag', eq(3)))
+
+        animals = gTable.all()
+        assert animals.size() == 2
+        assert animals.contains([id: 1, na: 'anotherName', ag: 3])
+        assert animals.contains([id: 2, na: 'cat', ag: 9])
     }
 
     @After

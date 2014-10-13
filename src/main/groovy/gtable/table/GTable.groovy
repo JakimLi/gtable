@@ -9,7 +9,7 @@ import gtable.statement.Where
  */
 class GTable {
 
-    static final String REG_WHERE_COL = /\s(.*)=/
+    static final String REG_WHERE_COL = /\s(.\w+)=/
     String tableName
     GStatement statement = new GStatement()
     Sql sql
@@ -73,7 +73,7 @@ class GTable {
     private String overrideWhereCols(Where where) {
         def statement = where.toString()
         (statement =~ (REG_WHERE_COL)).each {
-            statement = statement.replaceAll(REG_WHERE_COL, " ${(overridingCols."${it[1]}" ?: it[1])}=")
+            statement = statement.replaceAll("${it[0]}", " ${(overridingCols."${it[1]}" ?: it[1])}=")
         }
         statement
     }

@@ -86,3 +86,9 @@ You can also update records with specific condition using where
 You can use and/or to specify more than one condition
 
     gTable.update([age: 25], where('name', eq('jakim')).and('id', eq(3)))
+    
+After you override columns with columns method, you need to use the overriding column name in where any where statement
+
+    gTable.id('animal_id').columns([na: 'name', ag: 'age']).update([na: 'newname', ag: 3], where('id', eq(1)))
+    
+    gTable.update([na: 'anotherName'], where('id', eq(1)).and('ag', eq(3)))
