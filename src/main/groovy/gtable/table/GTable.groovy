@@ -9,6 +9,7 @@ import gtable.statement.Where
  */
 class GTable {
 
+    static final String REG_WHERE_COL = /\s(.*)=/
     String tableName
     GStatement statement = new GStatement()
     Sql sql
@@ -38,31 +39,9 @@ class GTable {
         userCols(result)
     }
 
-    List<String> cols(keys) {
-        keys.collect { overridingCols?."$it" ?: it }
-    }
-
-    def doInsert = {
-        sql.executeInsert(statement."$dialect"().insert() as String).find { true }.find { true }
-    }
-
     def table(String tableName) {
         this.tableName = tableName
         this
-    }
-
-    def columns(Map<String, String> cols) {
-        overridingCols << cols
-        this
-    }
-
-    @SuppressWarnings('UnnecessaryCollectCall')
-    List userCols(List result) {
-        result.collect {
-            it.inject([:]) { map, that ->
-                map << [((overridingCols.find { the -> the.value == that.key } ?: that).key): that.value]
-            }
-        }
     }
 
     def id(String idName) {
@@ -81,13 +60,49 @@ class GTable {
         statement.with {
             tableName = this.tableName
         }
-        sql.executeUpdate(statement.update(updating) as String)
+        sql.executeUpdate(statement.update(overrideUpdateCols(updating)) as String)
     }
 
     def update(Map<String, Object> updating, Where where) {
         statement.with {
             tableName = this.tableName
         }
-        sql.executeUpdate("${statement.update(updating)} ${where.toString()}" as String)
+        sql.executeUpdate("${statement.update(overrideUpdateCols(updating))} ${overrideWhereCols(where)}" as String)
+    }
+
+    private String overrideWhereCols(Where where) {
+        def statement = where.toString()
+        (statement =~ (REG_WHERE_COL)).each {
+            statement = statement.replaceAll(REG_WHERE_COL, " ${(overridingCols."${it[1]}" ?: it[1])}=")
+        }
+        statement
+    }
+
+    private Map overrideUpdateCols(Map<String, Object> updating) {
+        updating.inject([:]) { map, it ->
+            map << [(overridingCols."${it.key}" ?: it.key): it.value]
+        }
+    }
+
+    List<String> cols(keys) {
+        keys.collect { overridingCols?."$it" ?: it }
+    }
+
+    def doInsert = {
+        sql.executeInsert(statement."$dialect"().insert() as String).find { true }.find { true }
+    }
+
+    def columns(Map<String, String> cols) {
+        overridingCols << cols
+        this
+    }
+
+    @SuppressWarnings('UnnecessaryCollectCall')
+    List userCols(List result) {
+        result.collect {
+            it.inject([:]) { map, that ->
+                map << [((overridingCols.find { the -> the.value == that.key } ?: that).key): that.value]
+            }
+        }
     }
 }

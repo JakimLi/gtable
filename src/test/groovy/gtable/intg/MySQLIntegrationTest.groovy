@@ -117,6 +117,13 @@ class MySQLIntegrationTest {
         assert persons.size() == 2
         assert persons.contains([name: 'jakim', age: 25])
         assert persons.contains([name: 'linjia', age: 25])
+
+        gTable.columns([na: 'name']).update([na: 'newname'])
+
+        persons = gTable.all()
+        assert persons.size() == 2
+        assert persons.contains([na: 'newname', age: 25])
+        assert persons.contains([na: 'newname', age: 25])
     }
 
     @Test
@@ -136,6 +143,32 @@ class MySQLIntegrationTest {
         assert persons.size() == 2
         assert persons.contains([name: 'jakim', age: 25])
         assert persons.contains([name: 'linjia', age: 19])
+
+        gTable.columns([na: 'name']).update([na: 'newname'], where('na', eq('jakim')))
+
+        persons = gTable.all()
+        assert persons.size() == 2
+        assert persons.contains([na: 'newname', age: 25])
+        assert persons.contains([na: 'newname', age: 25])
+    }
+
+    @Test
+    void 'should update table values with condition with multiple different name'() {
+        gTable.table('animals').save([name: 'dog', age: 4])
+        gTable.table('animals').save([name: 'cat', age: 9])
+
+        def animals = gTable.id('animal_id').all()
+
+        assert animals.size() == 2
+        assert animals.contains([id: 1, name: 'dog', age: 4])
+        assert animals.contains([id: 2, name: 'cat', age: 9])
+
+        gTable.columns([na: 'name', ag: 'age']).update([na: 'newname', ag: 3], where('id', eq(1)))
+
+        animals = gTable.all()
+        assert animals.size() == 2
+        assert animals.contains([id: 1, na: 'newname', ag: 3])
+        assert animals.contains([id: 2, na: 'cat', ag: 9])
     }
 
     @After
