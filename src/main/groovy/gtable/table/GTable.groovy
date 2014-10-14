@@ -122,6 +122,11 @@ class GTable {
         sql.executeInsert(statement."$dialect"().insert() as String).find { true }.find { true }
     }
 
+    private oracleDoInsert = {
+        def rowid = sql.executeInsert(statement."$dialect"().insert() as String).find { true }.find { true }
+        sql.firstRow(statement."$dialect"().selectIdByRowId(rowid))
+    }
+
     @SuppressWarnings('UnnecessaryCollectCall')
     private List userCols(List result) {
         result.collect {

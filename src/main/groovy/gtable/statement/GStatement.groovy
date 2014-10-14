@@ -51,6 +51,7 @@ class GStatement {
     def oracle() {
         this.processId = includeId
         this.autoIncremental = { sequence ? "${sequence}.nextval," : '' }
+        GStatement.metaClass.selectIdByRowId = { rowid -> "SELECT $idName FROM $tableName WHERE rowid = $rowid" }
         this
     }
 
