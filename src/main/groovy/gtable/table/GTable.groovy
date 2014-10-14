@@ -140,7 +140,7 @@ class GTable {
         }
         def rowid = sql.executeInsert(statement."$usingDialect"().insert() as String).find { true }.find { true }
         if (rowid) {
-            sql.firstRow(statement."$usingDialect"().selectIdByRowId(rowid))
+            sql.firstRow(statement."$usingDialect"().selectIdByRowId(rowid))."$idName"
         }
     }
 

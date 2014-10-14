@@ -19,7 +19,7 @@ apply plugin: 'cobertura'
 apply plugin: 'com.github.kt3k.coveralls'
 
 group = 'jakim'
-version = '1.0.0'
+version = '1.0.1'
 sourceCompatibility = 1.6
 
 cobertura.coverageFormats = ['html', 'xml']

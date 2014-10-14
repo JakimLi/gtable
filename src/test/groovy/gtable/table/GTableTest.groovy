@@ -67,6 +67,6 @@ class GTableTest extends Specification {
 
         then:
         1 * sql.executeInsert('''INSERT INTO PERSONS(personId,name) VALUES(seq_person.nextval,'JAKIM')''') >> [[1]]
-        1 * sql.firstRow('''SELECT personId FROM PERSONS WHERE rowid=1''')
+        1 * sql.firstRow('''SELECT personId FROM PERSONS WHERE rowid=1''') >> [personId: 1]
     }
 }
