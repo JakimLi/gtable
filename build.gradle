@@ -6,10 +6,12 @@ apply plugin: 'codenarc'
 buildscript {
     repositories {
         mavenCentral()
+        jcenter()
     }
     dependencies {
         classpath 'net.saliman:gradle-cobertura-plugin:2.0.0'
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.0.1'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:0.5'
     }
 }
 
@@ -17,7 +19,7 @@ apply plugin: 'cobertura'
 apply plugin: 'com.github.kt3k.coveralls'
 
 group = 'jakim'
-version = '1.0.0.SNAPSHOT'
+version = '1.0.0'
 sourceCompatibility = 1.6
 
 cobertura.coverageFormats = ['html', 'xml']
@@ -45,6 +47,58 @@ dependencies {
             'mysql:mysql-connector-java:5.1.27'
     )
 }
+
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives sourcesJar
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            if (plugins.hasPlugin('war')) {
+                from components.web
+            } else {
+                from components.java
+            }
+
+            artifact sourcesJar {
+                classifier "sources"
+            }
+        }
+    }
+}
+
+bintray {
+    user = 'jakimli'
+    key = ''
+
+    publications = ['mavenJava']
+
+    dryRun = false
+    publish = true
+
+    pkg {
+        repo = 'maven'
+        userOrg = 'jakimli'
+        name = 'gtable'
+        websiteUrl = 'https://github.com/JakimLi/gtable'
+        issueTrackerUrl = 'https://github.com/JakimLi/gtable/issues'
+        vcsUrl = 'https://github.com/JakimLi/gtable.git'
+        licenses = ['Apache-2.0']
+        labels = ['groovy', 'light-weight orm', 'crud']
+        publicDownloadNumbers = true
+    }
+}
+
 
 task wrapper(type: Wrapper) {
     gradleVersion = 2.0;
