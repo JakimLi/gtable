@@ -4,18 +4,20 @@ import groovy.sql.Sql
 import gtable.statement.GStatement
 import gtable.statement.Where
 
+import static gtable.table.Dialect.MYSQL
+
 /**
  * Created by Jakim Li on 14-10-10.
  */
 class GTable {
 
-    static final String REG_WHERE_COL = /\s(.\w+)=/
-    String tableName
-    GStatement statement = new GStatement()
-    Sql sql
-    String dialect = 'mysql'
-    Map<String, String> overridingCols = [:]
-    String idName
+    private static final String REG_WHERE_COL = /\s(.\w+)=/
+    private String tableName
+    private GStatement statement = new GStatement()
+    private final Sql sql
+    private Dialect dialect = MYSQL
+    private Map<String, String> overridingCols = [:]
+    private String idName
 
     GTable(Sql sql) {
         this.sql = sql
@@ -112,16 +114,16 @@ class GTable {
         }
     }
 
-    List<String> cols(keys) {
+    private List<String> cols(keys) {
         keys.collect { overridingCols?."$it" ?: it }
     }
 
-    def doInsert = {
+    private doInsert = {
         sql.executeInsert(statement."$dialect"().insert() as String).find { true }.find { true }
     }
 
     @SuppressWarnings('UnnecessaryCollectCall')
-    List userCols(List result) {
+    private List userCols(List result) {
         result.collect {
             it.inject([:]) { map, that ->
                 map << [((overridingCols.find { the -> the.value == that.key } ?: that).key): that.value]

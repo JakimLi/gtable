@@ -106,7 +106,6 @@ ruleset {
     FinalClassWithProtectedMember
     ImplementationAsType
     LocaleSetDefault
-    PrivateFieldCouldBeFinal
     PublicInstanceField
     ReturnsNullInsteadOfEmptyArray
     ReturnsNullInsteadOfEmptyCollection
@@ -312,7 +311,6 @@ ruleset {
     EnumCustomSerializationIgnored
     SerialPersistentFields
     SerialVersionUID
-    SerializableClassMustDefineSerialVersionUID
 
     // rulesets/size.xml
     AbcComplexity   // DEPRECATED: Use the AbcMetric rule instead. Requires the GMetrics jar
