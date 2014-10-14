@@ -92,3 +92,13 @@ After you override columns with columns method, you need to use the overriding c
     gTable.id('animal_id').columns([na: 'name', ag: 'age']).update([na: 'newname', ag: 3], where('id', eq(1)))
     
     gTable.update([na: 'anotherName'], where('id', eq(1)).and('ag', eq(3)))
+    
+#### delete values
+You can clear the table
+
+    gTable.clear()
+    
+Or you can delete a specific record use the where clause
+
+    gTable.delete(where(id, eq(3))
+    
