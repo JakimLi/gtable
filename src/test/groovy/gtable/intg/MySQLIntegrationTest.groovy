@@ -178,6 +178,43 @@ class MySQLIntegrationTest {
         assert animals.contains([id: 2, na: 'cat', ag: 9])
     }
 
+    @Test
+    void 'should clear table'() {
+        gTable.table('animals').save([name: 'dog', age: 4])
+        gTable.table('animals').save([name: 'cat', age: 9])
+
+        def animals = gTable.id('animal_id').all()
+
+        assert animals.size() == 2
+        assert animals.contains([id: 1, name: 'dog', age: 4])
+        assert animals.contains([id: 2, name: 'cat', age: 9])
+
+        gTable.clear()
+
+        animals = gTable.all()
+
+        assert animals.size() == 0
+    }
+
+    @Test
+    void 'should delete one record from database'() {
+        gTable.table('animals').save([name: 'dog', age: 4])
+        gTable.table('animals').save([name: 'cat', age: 9])
+
+        def animals = gTable.id('animal_id').all()
+
+        assert animals.size() == 2
+        assert animals.contains([id: 1, name: 'dog', age: 4])
+        assert animals.contains([id: 2, name: 'cat', age: 9])
+
+        gTable.delete(where('id', eq(1)))
+
+        animals = gTable.all()
+
+        assert animals.size() == 1
+        assert animals[0] == [id: 2, name: 'cat', age: 9]
+    }
+
     @After
     void tearDown() {
         destroyDB()

@@ -61,4 +61,8 @@ class GStatement {
             }.join(COMMA)
         }"""
     }
+
+    def delete() {
+        "DELETE FROM $tableName"
+    }
 }

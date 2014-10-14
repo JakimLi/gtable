@@ -70,6 +70,20 @@ class GTable {
         sql.executeUpdate("${statement.update(overrideUpdateCols(updating))} ${overrideWhereCols(where)}" as String)
     }
 
+    def clear() {
+        statement.with {
+            tableName = this.tableName
+        }
+        sql.execute(statement.delete() as String)
+    }
+
+    def delete(Where where) {
+        statement.with {
+            tableName = this.tableName
+        }
+        sql.execute("${statement.delete()} ${overrideWhereCols(where)}" as String)
+    }
+
     private String overrideWhereCols(Where where) {
         def statement = where.toString()
         (statement =~ (REG_WHERE_COL)).each {

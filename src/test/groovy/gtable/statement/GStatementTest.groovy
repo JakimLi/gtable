@@ -147,4 +147,16 @@ class GStatementTest extends Specification {
         [age: 3] || 'UPDATE PERSONS SET age=3'
         [name: 'jakim', age: 3] || """UPDATE PERSONS SET name='jakim',age=3"""
     }
+
+    def "should generate delete sql satement"() {
+        statement.with {
+            tableName = 'PERSONS'
+        }
+
+        when:
+        def deleteStatement = statement.delete()
+
+        then:
+        deleteStatement == 'DELETE FROM PERSONS'
+    }
 }
