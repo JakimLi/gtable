@@ -138,9 +138,10 @@ class GTable {
             id = idName
             sequence = sequenceName
         }
-        def rowid = sql.executeInsert(statement."$usingDialect"().insert() as String).find { true }.find { true }
-        if (rowid) {
-            sql.firstRow(statement."$usingDialect"().selectIdByRowId(rowid))."$idName"
+        def rowId = sql.executeInsert(statement."$usingDialect"().insert() as String).find { true }.find { true }
+        if (rowId) {
+            def insertedRow = sql.firstRow(statement."$usingDialect"().selectIdByRowId(), [rowId: rowId])
+            insertedRow."$idName"
         }
     }
 
