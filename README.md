@@ -34,7 +34,7 @@ you can override the column name use columns method
     gTable.table('animals').columns([name: 'ANIMAL_NAME']).save([name: 'dog', age: 13])
 
 
-#### read all records form table
+#### read records form table
 
     def persons = gTable.table('persons').all()
 
@@ -59,6 +59,13 @@ for the id column, either you can define it just like any other columns, or you 
     def animals = gTable.id('animalId', 'animal_id').columns([na: 'name']).all()
     assert persons.size() == 1
     assert persons[0] == [animalId: 1, na: 'dog']
+    
+you can use where clause to find records with specific condition
+
+    animals = gTable.find(where('id', eq(1)))
+    
+    assert animals.size() == 1
+    assert animals[0] == [id: 1, name: 'dog', age: 4]
     
     
 #### update values
@@ -87,7 +94,7 @@ You can use and/or to specify more than one condition
 
     gTable.update([age: 25], where('name', eq('jakim')).and('id', eq(3)))
     
-After you override columns with columns method, you need to use the overriding column name in where any where statement
+After you override columns with columns method, you need to use the overriding column name in any where statement
 
     gTable.id('animal_id').columns([na: 'name', ag: 'age']).update([na: 'newname', ag: 3], where('id', eq(1)))
     
