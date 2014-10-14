@@ -50,18 +50,18 @@ class GTable {
         userCols(result)
     }
 
-    def table(String tableName) {
+    GTable table(String tableName) {
         this.tableName = tableName
         this
     }
 
-    def id(String idName) {
+    GTable id(String idName) {
         this.idName = idName
         this.overridingCols << [id: idName]
         this
     }
 
-    def id(String idKey, String idName) {
+    GTable id(String idKey, String idName) {
         this.idName = idName
         this.overridingCols << [(idKey): idName]
         this
@@ -95,7 +95,7 @@ class GTable {
         sql.execute("${statement.delete()} ${overrideWhereCols(where)}" as String)
     }
 
-    def columns(Map<String, String> cols) {
+    GTable columns(Map<String, String> cols) {
         overridingCols << cols
         this
     }
