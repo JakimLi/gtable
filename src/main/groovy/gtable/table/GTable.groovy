@@ -39,6 +39,15 @@ class GTable {
         userCols(result)
     }
 
+    def find(Where where) {
+        def result = []
+        statement.tableName = tableName
+        sql.eachRow("""${statement."$dialect"().select()} ${overrideWhereCols(where)}""" as String) {
+            result << it.toRowResult()
+        }
+        userCols(result)
+    }
+
     def table(String tableName) {
         this.tableName = tableName
         this
@@ -84,6 +93,11 @@ class GTable {
         sql.execute("${statement.delete()} ${overrideWhereCols(where)}" as String)
     }
 
+    def columns(Map<String, String> cols) {
+        overridingCols << cols
+        this
+    }
+
     private String overrideWhereCols(Where where) {
         def statement = where.toString()
         (statement =~ (REG_WHERE_COL)).each {
@@ -104,11 +118,6 @@ class GTable {
 
     def doInsert = {
         sql.executeInsert(statement."$dialect"().insert() as String).find { true }.find { true }
-    }
-
-    def columns(Map<String, String> cols) {
-        overridingCols << cols
-        this
     }
 
     @SuppressWarnings('UnnecessaryCollectCall')

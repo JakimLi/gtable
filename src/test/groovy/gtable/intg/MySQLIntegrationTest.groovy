@@ -215,6 +215,23 @@ class MySQLIntegrationTest {
         assert animals[0] == [id: 2, name: 'cat', age: 9]
     }
 
+    @Test
+    void 'should find specific records use where clause'() {
+        gTable.table('animals').save([name: 'dog', age: 4])
+        gTable.table('animals').save([name: 'cat', age: 9])
+
+        def animals = gTable.id('animal_id').all()
+
+        assert animals.size() == 2
+        assert animals.contains([id: 1, name: 'dog', age: 4])
+        assert animals.contains([id: 2, name: 'cat', age: 9])
+
+        animals = gTable.find(where('id', eq(1)))
+
+        assert animals.size() == 1
+        assert animals[0] == [id: 1, name: 'dog', age: 4]
+    }
+
     @After
     void tearDown() {
         destroyDB()
