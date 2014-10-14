@@ -29,7 +29,7 @@ class GTable {
             columns = cols(vals.keySet())
             values = vals*.value
         }
-        doInsert()
+        "${dialect}DoInsert"()
     }
 
     def all() {
@@ -118,7 +118,7 @@ class GTable {
         keys.collect { overridingCols?."$it" ?: it }
     }
 
-    private doInsert = {
+    private mysqlDoInsert = {
         sql.executeInsert(statement."$dialect"().insert() as String).find { true }.find { true }
     }
 

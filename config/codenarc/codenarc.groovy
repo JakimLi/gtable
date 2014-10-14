@@ -375,7 +375,6 @@ ruleset {
     UnusedArray
     UnusedMethodParameter
     UnusedObject
-    UnusedPrivateField
     UnusedPrivateMethod
     UnusedPrivateMethodParameter
     UnusedVariable
