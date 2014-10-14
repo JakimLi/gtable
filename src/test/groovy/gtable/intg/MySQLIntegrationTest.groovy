@@ -8,6 +8,7 @@ import org.junit.Test
 
 import static gtable.statement.Where.eq
 import static gtable.statement.Where.where
+import static gtable.table.Dialect.MYSQL
 
 /**
  * Created by Jakim Li on 14-10-10.
@@ -27,7 +28,7 @@ class MySQLIntegrationTest {
 
     @Test
     void 'should get auto generated id'() {
-        def actualId = gTable.table('animals').save([name: 'dog', age: 13])
+        def actualId = gTable.table('animals').dialect(MYSQL).save([name: 'dog', age: 13])
 
         def row = sql.firstRow('select * from animals')
         assert actualId == row.animal_id

@@ -3,6 +3,8 @@ package gtable.table
 import groovy.sql.Sql
 import spock.lang.Specification
 
+import static gtable.table.Dialect.ORACLE
+
 /**
  * Created by Jakim Li on 14-10-10.
  */
@@ -49,5 +51,22 @@ class GTableTest extends Specification {
 
         then:
         1 * sql.eachRow('SELECT * FROM PERSONS', _)
+    }
+
+    def "oracle can use sql to call database"() {
+        when:
+        gTable.table('PERSONS').dialect(ORACLE).save([name: 'JAKIM'])
+
+        then:
+        1 * sql.executeInsert('''INSERT INTO PERSONS(name) VALUES('JAKIM')''')
+    }
+
+    def "oracle can use sql to call database with id"() {
+        when:
+        gTable.table('PERSONS').dialect(ORACLE).id('personId').sequence('seq_person').save([name: 'JAKIM'])
+
+        then:
+        1 * sql.executeInsert('''INSERT INTO PERSONS(personId,name) VALUES(seq_person.nextval,'JAKIM')''') >> [[1]]
+        1 * sql.firstRow('''SELECT personId FROM PERSONS WHERE rowid=1''')
     }
 }

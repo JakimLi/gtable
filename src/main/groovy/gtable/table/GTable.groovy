@@ -15,9 +15,10 @@ class GTable {
     private String tableName
     private GStatement statement = new GStatement()
     private final Sql sql
-    private Dialect dialect = MYSQL
+    private Dialect usingDialect = MYSQL
     private Map<String, String> overridingCols = [:]
     private String idName
+    private String sequenceName
 
     GTable(Sql sql) {
         this.sql = sql
@@ -29,13 +30,13 @@ class GTable {
             columns = cols(vals.keySet())
             values = vals*.value
         }
-        "${dialect}DoInsert"()
+        "${usingDialect}DoInsert"()
     }
 
     def all() {
         def result = []
         statement.tableName = tableName
-        sql.eachRow(statement."$dialect"().select() as String) {
+        sql.eachRow(statement."$usingDialect"().select() as String) {
             result << it.toRowResult()
         }
         userCols(result)
@@ -44,7 +45,7 @@ class GTable {
     def find(Where where) {
         def result = []
         statement.tableName = tableName
-        sql.eachRow("""${statement."$dialect"().select()} ${overrideWhereCols(where)}""" as String) {
+        sql.eachRow("""${statement."$usingDialect"().select()} ${overrideWhereCols(where)}""" as String) {
             result << it.toRowResult()
         }
         userCols(result)
@@ -100,6 +101,16 @@ class GTable {
         this
     }
 
+    GTable dialect(Dialect dlt) {
+        this.usingDialect = dlt
+        this
+    }
+
+    GTable sequence(String seq) {
+        this.sequenceName = seq
+        this
+    }
+
     private String overrideWhereCols(Where where) {
         def statement = where.toString()
         (statement =~ (REG_WHERE_COL)).each {
@@ -119,12 +130,18 @@ class GTable {
     }
 
     private mysqlDoInsert = {
-        sql.executeInsert(statement."$dialect"().insert() as String).find { true }.find { true }
+        sql.executeInsert(statement."$usingDialect"().insert() as String).find { true }.find { true }
     }
 
     private oracleDoInsert = {
-        def rowid = sql.executeInsert(statement."$dialect"().insert() as String).find { true }.find { true }
-        sql.firstRow(statement."$dialect"().selectIdByRowId(rowid))
+        idName && statement.with {
+            id = idName
+            sequence = sequenceName
+        }
+        def rowid = sql.executeInsert(statement."$usingDialect"().insert() as String).find { true }.find { true }
+        if (rowid) {
+            sql.firstRow(statement."$usingDialect"().selectIdByRowId(rowid))
+        }
     }
 
     @SuppressWarnings('UnnecessaryCollectCall')
