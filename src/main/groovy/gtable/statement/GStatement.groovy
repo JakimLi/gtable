@@ -52,7 +52,7 @@ class GStatement {
     def oracle() {
         this.processId = includeId
         this.autoIncremental = { sequence ? "${sequence}.nextval," : '' }
-        this.selectIdByRowId { "SELECT * FROM $tableName WHERE rowid=:rowId" }
+        this.selectIdByRowId = { "SELECT * FROM $tableName WHERE rowid=:rowId" }
         this
     }
 

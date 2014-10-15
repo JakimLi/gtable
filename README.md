@@ -21,12 +21,23 @@ you can save a map to a table, default using mysql dialect, will use the key as 
     assert row.name == 'dog'
     assert row.age == 13
 
+you can use dialect to specify oracle database
+
+    gTable.dialect(Dialect.ORACLE)
+
+
 #### Auto incremental id
 if database generate an id, for example auto incremental internal id, save method will return it
 
     def generatedId = gTable.table('animals').save([name: 'dog', age: 13])
 
     assert generatedId > 0
+
+when using oracle, you can you sequence to generate a internal id
+
+    gTable.dialect(Dialect.ORACLE).id('IDENTITY_ID').sequence('SEQ_IDENTITY')
+    
+    gTable.save(...)
 
 #### Custom column names
 you can override the column name use columns method
