@@ -6,6 +6,17 @@ Target to do the simple CRUD to relational database based on Map/JSON, using Gro
 ## Quick Start
 ======
 ### Install
+if you are using gradle, add below to you build script to start
+
+    repositories {
+        jcenter()
+    }
+    
+    dependencies {
+        compile(
+            'jakim:gtable:1.0.0.RELEASE'
+        )
+    }
 
 ======
 ### Sample
