@@ -15,6 +15,7 @@ class GStatement {
     String sequence
     def processId = { '' }
     def autoIncremental = { '' }
+    Closure selectIdByRowId = { }
 
     String insert() {
         assert tableName, 'table name cannot be empty'
@@ -51,7 +52,7 @@ class GStatement {
     def oracle() {
         this.processId = includeId
         this.autoIncremental = { sequence ? "${sequence}.nextval," : '' }
-        GStatement.metaClass.selectIdByRowId { "SELECT * FROM $tableName WHERE rowid=:rowId" }
+        this.selectIdByRowId { "SELECT * FROM $tableName WHERE rowid=:rowId" }
         this
     }
 

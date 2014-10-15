@@ -140,8 +140,10 @@ class GTable {
         }
         def rowId = sql.executeInsert(statement."$usingDialect"().insert() as String).find { true }.find { true }
         if (rowId) {
-            def insertedRow = sql.firstRow(statement."$usingDialect"().selectIdByRowId(), [rowId: rowId])
-            insertedRow."$idName"
+            def insertedRow = sql.firstRow(statement.oracle().selectIdByRowId(), [rowId: rowId])
+            if (idName) {
+                insertedRow."$idName"
+            }
         }
     }
 
@@ -149,8 +151,17 @@ class GTable {
     private List userCols(List result) {
         result.collect {
             it.inject([:]) { map, that ->
-                map << [((overridingCols.find { the -> the.value == that.key } ?: that).key): that.value]
+                def column = lowerKey(that)
+                map << [(( findOverriding(column) ?: column).key): column.value]
             }
         }
+    }
+
+    private Map.Entry<String, String> lowerKey(def column) {
+        new MapEntry(column.key.toLowerCase(), column.value)
+    }
+
+    private Map.Entry<String, String> findOverriding(column) {
+        overridingCols.find { it.value.equalsIgnoreCase(column.key) }
     }
 }
