@@ -13,9 +13,13 @@ class GStatement {
     List<Object> values
     String id
     String sequence
-    def processId = { '' }
-    def autoIncremental = { '' }
-    Closure selectIdByRowId = { }
+    private Closure processId = { '' }
+    private Closure autoIncremental = { '' }
+    private Closure selectIdByRowId = { }
+    private Closure includeId = {
+        columns = columns ?: []
+        id && columns.add(0, id)
+    }
 
     String insert() {
         assert tableName, 'table name cannot be empty'
@@ -23,40 +27,22 @@ class GStatement {
         insertInto tableName, cols(), vals()
     }
 
-    def select() {
+    String select() {
         "SELECT * FROM $tableName"
     }
 
-    def includeId = {
-        columns = columns ?: []
-        id && columns.add(0, id)
-    }
-
-    private String cols() {
-        processId()
-        columns?.join(COMMA)
-    }
-
-    private String vals() {
-        "${autoIncremental()}${values.collect { numeric(it) ? it : quote(it) }.join(COMMA)}"
-    }
-
-    private String insertInto(def table, def cols, def vals) {
-        "INSERT INTO $table($cols) VALUES($vals)"
-    }
-
-    def mysql() {
+    GStatement mysql() {
         this
     }
 
-    def oracle() {
+    GStatement oracle() {
         this.processId = includeId
         this.autoIncremental = { sequence ? "${sequence}.nextval," : '' }
         this.selectIdByRowId = { "SELECT * FROM $tableName WHERE rowid=:rowId" }
         this
     }
 
-    def update(Map<String, Object> updating) {
+    String update(Map<String, Object> updating) {
         """UPDATE $tableName SET ${
             updating.collect {
                 "${it.key}=${numeric(it.value) ? it.value : quote(it.value)}"
@@ -64,7 +50,20 @@ class GStatement {
         }"""
     }
 
-    def delete() {
+    String delete() {
         "DELETE FROM $tableName"
+    }
+
+    private String insertInto(def table, def cols, def vals) {
+        "INSERT INTO $table($cols) VALUES($vals)"
+    }
+
+    private String vals() {
+        "${autoIncremental()}${values.collect { numeric(it) ? it : quote(it) }.join(COMMA)}"
+    }
+
+    private String cols() {
+        processId()
+        columns?.join(COMMA)
     }
 }

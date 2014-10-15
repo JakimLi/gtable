@@ -24,7 +24,7 @@ class GTable {
         this.sql = sql
     }
 
-    def save(Map<String, Object> vals) {
+    Number save(Map<String, Object> vals) {
         statement.with {
             tableName = this.tableName
             columns = cols(vals.keySet())
@@ -33,7 +33,7 @@ class GTable {
         "${usingDialect}DoInsert"()
     }
 
-    def all() {
+    List<Map> all() {
         def result = []
         statement.tableName = tableName
         sql.eachRow(statement."$usingDialect"().select() as String) {
@@ -42,7 +42,7 @@ class GTable {
         userCols(result)
     }
 
-    def find(Where where) {
+    List<Map> find(Where where) {
         def result = []
         statement.tableName = tableName
         sql.eachRow("""${statement."$usingDialect"().select()} ${overrideWhereCols(where)}""" as String) {
@@ -68,28 +68,28 @@ class GTable {
         this
     }
 
-    def update(Map<String, Object> updating) {
+    void update(Map<String, Object> updating) {
         statement.with {
             tableName = this.tableName
         }
         sql.executeUpdate(statement.update(overrideUpdateCols(updating)) as String)
     }
 
-    def update(Map<String, Object> updating, Where where) {
+    void update(Map<String, Object> updating, Where where) {
         statement.with {
             tableName = this.tableName
         }
         sql.executeUpdate("${statement.update(overrideUpdateCols(updating))} ${overrideWhereCols(where)}" as String)
     }
 
-    def clear() {
+    void clear() {
         statement.with {
             tableName = this.tableName
         }
         sql.execute(statement.delete() as String)
     }
 
-    def delete(Where where) {
+    void delete(Where where) {
         statement.with {
             tableName = this.tableName
         }
