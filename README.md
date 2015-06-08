@@ -14,7 +14,7 @@ if you are using gradle, add below to you build script to start
     
     dependencies {
         compile(
-            'jakim:gtable:1.0.0.RELEASE'
+            'jakim:gtable:1.0.1.RELEASE'
         )
     }
 
@@ -130,4 +130,15 @@ You can clear the table
 Or you can delete a specific record use the where clause
 
     gTable.delete(where(id, eq(3))
-    
+
+
+#### using date and time (after version 1.0.1.RELEASE)
+Save date (mysql)
+
+    gTable.table('human').save([name: 'dog', birthday: new Date('1990-05-01', '%Y-%m-%d')])
+    def all = gTable.all()
+    assert all[0] == [name: 'dog', birthday: new java.sql.Date(90, Calendar.MAY, 1)]
+
+Using date in where clause
+
+    gTable.table('human').find(where('birthday', eq(new Date('1990-05-01', '%Y-%m-%d'))))
