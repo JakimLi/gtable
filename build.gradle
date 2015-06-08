@@ -19,7 +19,7 @@ apply plugin: 'cobertura'
 apply plugin: 'com.github.kt3k.coveralls'
 
 group = 'jakim'
-version = '1.0.0.RELEASE'
+version = '1.0.1.RELEASE'
 sourceCompatibility = 1.6
 
 cobertura.coverageFormats = ['html', 'xml']
@@ -79,7 +79,7 @@ publishing {
 
 bintray {
     user = 'jakimli'
-    key = ''
+    key = 'debe5e9c480852d3d5c53157ef1bd9d997327428'
 
     publications = ['mavenJava']
 

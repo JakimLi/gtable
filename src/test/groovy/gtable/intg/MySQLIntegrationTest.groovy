@@ -1,6 +1,7 @@
 package gtable.intg
 
 import groovy.sql.Sql
+import gtable.statement.Date
 import gtable.table.GTable
 import org.junit.After
 import org.junit.Before
@@ -233,6 +234,27 @@ class MySQLIntegrationTest {
         assert animals[0] == [id: 1, name: 'dog', age: 4]
     }
 
+    @Test
+    void 'should insert date format'() {
+        gTable.table('human').save([name: 'dog', birthday: '1990-05-01'])
+        gTable.table('human').save([name: 'dog', birthday: new Date('1990-05-01', '%Y-%m-%d')])
+
+        def all = gTable.all()
+        assert all.size() == 2
+        assert all[0] == [name: 'dog', birthday: new java.sql.Date(90, Calendar.MAY, 1)]
+        assert all[1] == [name: 'dog', birthday: new java.sql.Date(90, Calendar.MAY, 1)]
+    }
+
+    @Test
+    void 'should filter by date format'() {
+        gTable.table('human').save([name: 'dog', birthday: '1990-05-01'])
+        gTable.table('human').save([name: 'cat', birthday: '1990-05-02'])
+
+        def human = gTable.table('human').find(where('birthday', eq(new Date('1990-05-01', '%Y-%m-%d'))))
+
+        assert human[0].name == 'dog'
+    }
+
     @After
     void tearDown() {
         destroyDB()
@@ -241,6 +263,7 @@ class MySQLIntegrationTest {
     void destroyDB() {
         sql.execute 'drop table persons;'
         sql.execute 'drop table animals;'
+        sql.execute 'drop table human;'
     }
 
     void createDB() {
@@ -257,6 +280,13 @@ class MySQLIntegrationTest {
                 name CHAR(30) NOT NULL,
                 age int not null,
                 PRIMARY KEY (animal_id)
+            );
+        '''
+
+        sql.execute '''
+            create table human(
+                name varchar(20) not null,
+                birthday date not null
             );
         '''
     }

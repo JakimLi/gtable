@@ -4,6 +4,7 @@ import groovy.sql.Sql
 import gtable.statement.GStatement
 import gtable.statement.Where
 
+import static gtable.statement.Where.TO_DATE_TEMPLATE
 import static gtable.table.Dialect.MYSQL
 
 /**
@@ -112,11 +113,15 @@ class GTable {
     }
 
     private String overrideWhereCols(Where where) {
-        def statement = where.toString()
+        def statement = replaceToDateFunction(where.toString())
         (statement =~ (REG_WHERE_COL)).each {
             statement = statement.replaceAll("${it[0]}", " ${(overridingCols."${it[1]}" ?: it[1])}=")
         }
         statement
+    }
+
+    private String replaceToDateFunction(String val) {
+        val.replace(TO_DATE_TEMPLATE, usingDialect.toDate)
     }
 
     private Map overrideUpdateCols(Map<String, Object> updating) {

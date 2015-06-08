@@ -1,7 +1,9 @@
 package gtable.statement
 
-import static gtable.util.Util.numeric
-import static gtable.util.Util.quote
+import gtable.util.Util
+
+import static gtable.table.Dialect.MYSQL
+import static gtable.table.Dialect.ORACLE
 
 /**
  * Created by Jakim Li on 14-10-9.
@@ -16,6 +18,7 @@ class GStatement {
     private Closure processId = { '' }
     private Closure autoIncremental = { '' }
     private Closure selectIdByRowId = { }
+    private Closure stringToDate = { }
     private Closure includeId = {
         columns = columns ?: []
         id && columns.add(0, id)
@@ -32,6 +35,7 @@ class GStatement {
     }
 
     GStatement mysql() {
+        this.stringToDate = { val -> "${MYSQL.toDate}('${val.date}','${val.format}')" }
         this
     }
 
@@ -39,13 +43,14 @@ class GStatement {
         this.processId = includeId
         this.autoIncremental = { sequence ? "${sequence}.nextval," : '' }
         this.selectIdByRowId = { "SELECT * FROM $tableName WHERE rowid=:rowId" }
+        this.stringToDate = { val -> "${ORACLE.toDate}('${val.date}','${val.fomat}')" }
         this
     }
 
     String update(Map<String, Object> updating) {
         """UPDATE $tableName SET ${
             updating.collect {
-                "${it.key}=${numeric(it.value) ? it.value : quote(it.value)}"
+                "${it.key}=${wrapToSql(it.value)}"
             }.join(COMMA)
         }"""
     }
@@ -59,11 +64,21 @@ class GStatement {
     }
 
     private String vals() {
-        "${autoIncremental()}${values.collect { numeric(it) ? it : quote(it) }.join(COMMA)}"
+        "${autoIncremental()}${values.collect { wrapToSql(it) }.join(COMMA)}"
     }
 
     private String cols() {
         processId()
         columns?.join(COMMA)
+    }
+
+    private wrapToSql(def val) {
+        if (Util.numeric(val)) {
+            val
+        } else if (Util.isDate(val)) {
+            stringToDate(val)
+        } else {
+            Util.quote(val)
+        }
     }
 }
